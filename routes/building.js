@@ -69,7 +69,7 @@ async function building(req) {
   });
   // write data to request body
   dataBuilding.write(responseMesg);
-  dataBuilding.end();
+  dataBuilding.end(responseMesg);
 
 
   console.log('xxx');
