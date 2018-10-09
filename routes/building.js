@@ -5,17 +5,33 @@ const axios = require('axios');
 
 router.get('/customFiled', async function (req, res) {
   console.log('1.1');
+  
   var databuilding = await buildingReq(req);
-  var dataFloor = await floorReq(databuilding.id);
-  // res.send(JSON.stringify(databuilding+','+dataFloor));
-  // console.log(JSON.stringify(databuilding));
-  // console.log(JSON.stringify(dataFloor));
-  var a ={};
-  a.databuilding = databuilding;
-  a.datafloor = dataFloor;
+  var a = {};
+  var b = {};
+  var key = 'id';
+  b[key] = [];
+  // a.databuilding = databuilding;
+  // var floor = databuilding.id;
+  console.log(databuilding.id);
 
+  var v ;
+  if(typeof databuilding.id === "undefined"){
+    for(var x in databuilding){
+      // console.log(databuilding[x]);
+      var dataFloor = await floorReq(databuilding[x].id);
+      console.log(databuilding[x].id);
+      b[key].push(dataFloor);
+      // console.log(v);
+    }
+    a.dataFloor = b;
+  }else{
+    var dataFloor = await floorReq(databuilding.id);
+    a.dataBuilding = databuilding;
+    a.dataFloor = dataFloor;
+  }
+  
   res.send(a);
-
 });
 
 async function buildingReq(req) {
@@ -23,7 +39,6 @@ async function buildingReq(req) {
   var value = req.query.Value;
   var responseMesg;
   try {
-    console.log('In Try');
     var sendReq = await axios.get('https://dashboard.situm.es/api/v1/projects', {
       headers: {
         'Content-Type': 'application/json',
@@ -48,7 +63,7 @@ async function buildingReq(req) {
       }
     } else if (key == null && value == null) {
       responseMesg = data;
-      console.log('else if');
+      console.log('All Buliding');
     }
   } catch (err) {
     console.log("error : " + err);
@@ -59,7 +74,7 @@ async function buildingReq(req) {
 
 async function floorReq(buildingID) {
   try {
-    var sendReq = await axios.get('https://dashboard.situm.es/api/v1/projects/'+buildingID+'/floors', {
+    var sendReq = await axios.get('https://dashboard.situm.es/api/v1/projects/' + buildingID + '/floors', {
       headers: {
         'Content-Type': 'application/json',
         'X-API-EMAIL': 'sakda.ace@gmail.com',
@@ -69,16 +84,11 @@ async function floorReq(buildingID) {
     var responseMesg = sendReq.data;
 
   } catch (err) {
-    console.log("error : " + err);
+    console.log("error Floor : " + err);
   }
   // console.log('xxxxx : ' + JSON.stringify(responseMesg));
   return responseMesg;
 }
-
-
-
-
-
 module.exports = router;
 
 
