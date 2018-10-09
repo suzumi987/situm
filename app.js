@@ -12,7 +12,7 @@ var buildingRouter = require('./routes/building');
 var express = require('express');
 var app = express();
 
-app.use(bodyParser());
+// app.use(bodyParser());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -33,9 +33,14 @@ app.use(function(req, res, next) {
 });
 
 
-app.listen(3000,function(){
-  console.log('Server Start port 3000');
-});
+// app.listen(3000,function(err){
+//   if(err){
+//     console.log('fail to start port 3000')
+//     console.log(err)
+//   } else{
+//     console.log('Server Start port 3000');
+//   }
+// });
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
