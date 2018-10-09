@@ -8,9 +8,9 @@ router.get('/customFiled', async function (req, res) {
   
   var databuilding = await buildingReq(req);
   var filterFL = await filterfloor(databuilding);
-  var filterData = await filterDatas(filterFL);
+  // var filterData = await filterDatas(filterFL);
   
-  res.send(filter);
+  res.send(filterFL);
 });
 
 async function buildingReq(req) {
@@ -71,6 +71,7 @@ async function floorReq(buildingID) {
 module.exports = router;
 
 async function filterfloor(databuilding){
+  console.log('1.2');
   var a = {};
   var b = {};
   var key = 'id';
@@ -98,6 +99,7 @@ async function filterfloor(databuilding){
 }
 
 async function filterDatas(filterFL){
-  console.log(filterFL.databuilding.name);
+  console.log('1.3');
+  // console.log("filterData : "+filterFL.databuilding.name);
 
 }
