@@ -1,8 +1,8 @@
 var https = require('https');
 var request = require('request');
 module.exports = {
-    building: function(req, res) {
-        var responseMesg = 'Datas';
+    building: async function(req, res) {
+        var responseMesg ;
         console.log('2');
         var key = req.query.Key;
         var value = req.query.Value;
@@ -45,7 +45,7 @@ module.exports = {
             //  console.log(responseMesg);
             // res.send(responseMesg);
             console.log('ccc');
-            return responseMesg;
+            // return responseMesg;
             
           });
         });
@@ -53,11 +53,13 @@ module.exports = {
           console.log('problem with request: ' + e.message);
         });
         // write data to request body
-        dataBuilding.write(responseMesg);
-        dataBuilding.end(responseMesg);
+        // dataBuilding.write(responseMesg);
+        var a = await responseMesg
+        return a;
+        dataBuilding.end();
       
       
         console.log('xxx');
-        // return responseMesg;
+        
       }
 }
