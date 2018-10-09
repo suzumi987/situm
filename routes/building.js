@@ -7,31 +7,9 @@ router.get('/customFiled', async function (req, res) {
   console.log('1.1');
   
   var databuilding = await buildingReq(req);
-  var a = {};
-  var b = {};
-  var key = 'id';
-  b[key] = [];
-  // a.databuilding = databuilding;
-  // var floor = databuilding.id;
-  console.log(databuilding.id);
-
-  var v ;
-  if(typeof databuilding.id === "undefined"){
-    for(var x in databuilding){
-      // console.log(databuilding[x]);
-      var dataFloor = await floorReq(databuilding[x].id);
-      console.log(databuilding[x].id);
-      b[key].push(dataFloor);
-      // console.log(v);
-    }
-    a.dataFloor = b;
-  }else{
-    var dataFloor = await floorReq(databuilding.id);
-    a.dataBuilding = databuilding;
-    a.dataFloor = dataFloor;
-  }
+  var filter = await filterfloor(databuilding);
   
-  res.send(a);
+  res.send(filter);
 });
 
 async function buildingReq(req) {
@@ -91,5 +69,29 @@ async function floorReq(buildingID) {
 }
 module.exports = router;
 
+async function filterfloor(databuilding){
+  var a = {};
+  var b = {};
+  var key = 'id';
+  b[key] = [];
+  // a.databuilding = databuilding;
+  // var floor = databuilding.id;
+  console.log(databuilding.id);
 
-
+  var v ;
+  if(typeof databuilding.id === "undefined"){
+    for(var x in databuilding){
+      // console.log(databuilding[x]);
+      var dataFloor = await floorReq(databuilding[x].id);
+      console.log(databuilding[x].id);
+      b[key].push(dataFloor);
+      // console.log(v);
+    }
+    a.dataFloor = b;
+  }else{
+    var dataFloor = await floorReq(databuilding.id);
+    a.dataBuilding = databuilding;
+    a.dataFloor = dataFloor;
+  }
+  return a;
+}
