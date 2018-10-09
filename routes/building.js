@@ -11,7 +11,7 @@ router.get('/customFiled', async function (req, res) {
   // console.log(JSON.stringify(databuilding));
   // console.log(JSON.stringify(dataFloor));
   var a ={};
-  a.databu = databuilding;
+  a.databuilding = databuilding;
   a.datafloor = dataFloor;
 
   res.send(a);
