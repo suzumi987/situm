@@ -151,7 +151,7 @@ async function filterDatas(filterValue) {
     }
   }
   a.dataFloor = b;
-  return filterValue;
+  return a;
 }
 
 module.exports = router;
