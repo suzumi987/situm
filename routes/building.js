@@ -5,12 +5,12 @@ const axios = require('axios');
 
 router.get('/customFiled', async function (req, res) {
   console.log('1.1');
-  
+
   var databuilding = await buildingReq(req);
   var filterFL = await filterfloor(databuilding);
-  // var filterData = await filterDatas(filterFL);
-  
-  res.send(filterFL);
+  var filterData = await filterDatas(filterFL);
+
+  res.send(filterData);
 });
 
 async function buildingReq(req) {
@@ -52,6 +52,7 @@ async function buildingReq(req) {
 
 
 async function floorReq(buildingID) {
+  console.log('1.3');
   try {
     var sendReq = await axios.get('https://dashboard.situm.es/api/v1/projects/' + buildingID + '/floors', {
       headers: {
@@ -70,7 +71,7 @@ async function floorReq(buildingID) {
 }
 module.exports = router;
 
-async function filterfloor(databuilding){
+async function filterfloor(databuilding) {
   console.log('1.2');
   var a = {};
   var b = {};
@@ -80,17 +81,16 @@ async function filterfloor(databuilding){
   // var floor = databuilding.id;
   console.log(databuilding.id);
 
-  var v ;
-  if(typeof databuilding.id === "undefined"){
-    for(var x in databuilding){
+  var v;
+  if (typeof databuilding.id === "undefined") {
+    for (var x in databuilding) {
       // console.log(databuilding[x]);
       var dataFloor = await floorReq(databuilding[x].id);
-      console.log(databuilding[x].id);
       b[key].push(dataFloor);
       // console.log(v);
     }
     a.dataFloor = b;
-  }else{
+  } else {
     var dataFloor = await floorReq(databuilding.id);
     a.dataBuilding = databuilding;
     a.dataFloor = dataFloor;
@@ -98,8 +98,33 @@ async function filterfloor(databuilding){
   return a;
 }
 
-async function filterDatas(filterFL){
-  console.log('1.3');
-  // console.log("filterData : "+filterFL.databuilding.name);
-
+async function filterDatas(filterFL) {
+  console.log('1.4');
+  var a = {};
+  var b = {};
+  var key = 'floor';
+  b[key] = [];
+  for (var x in filterFL) {
+    var d = filterFL[x];
+    if (x == 'dataBuilding') {
+      for (var s in d) {
+        if (s == 'name') {
+          a.name = d[s];
+        } else if (s == 'location') {
+          a.location = d[s];
+        }
+      }
+    } else if (x == 'dataFloor') {
+      var z = filterFL[x];
+      for (var k in z) {
+        var x = {};
+        x.level = z[k].level;
+        x.level_height = z[k].level_height;
+        x.maps = z[k].maps;
+        b[key].push(x);
+      }
+    }
+  }
+  a.dataFloor = b;
+  return a;
 }
