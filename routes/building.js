@@ -3,19 +3,37 @@ var router = express.Router();
 const axios = require('axios');
 
 
-router.get('/customFiled', async function (req, res) {
+router.get('/', async function (req, res) {
   console.log('1.1');
-
   var databuilding = await buildingReq(req);
   var filterFL = await filterfloor(databuilding);
   var filterData = await filterDatas(filterFL);
 
-  res.send(filterData);
+  if (req.query.data == 'building') {
+    if (req.query.key != null && req.query.value != null) {
+      res.send(databuilding);
+    } else {
+      res.send(databuilding);
+    }
+  } else if (req.query.data == 'floor') {
+    if (req.query.key != null && req.query.value != null) {
+      res.send(filterFL);
+    } else {
+      res.send(filterFL);
+    }
+  } else if (req.query.data == 'filter') {
+    if (req.query.key != null && req.query.value != null) {
+      res.send(filterData);
+    } else {
+      res.send(filterData);
+    }
+  }
+
 });
 
 async function buildingReq(req) {
-  var key = req.query.Key;
-  var value = req.query.Value;
+  var key = req.query.key;
+  var value = req.query.value;
   var responseMesg;
   try {
     var sendReq = await axios.get('https://dashboard.situm.es/api/v1/projects', {
@@ -69,7 +87,7 @@ async function floorReq(buildingID) {
   // console.log('xxxxx : ' + JSON.stringify(responseMesg));
   return responseMesg;
 }
-module.exports = router;
+
 
 async function filterfloor(databuilding) {
   console.log('1.2');
@@ -77,18 +95,14 @@ async function filterfloor(databuilding) {
   var b = {};
   var key = 'id';
   b[key] = [];
-  // a.databuilding = databuilding;
-  // var floor = databuilding.id;
   console.log(databuilding.id);
-
   var v;
   if (typeof databuilding.id === "undefined") {
     for (var x in databuilding) {
-      // console.log(databuilding[x]);
       var dataFloor = await floorReq(databuilding[x].id);
       b[key].push(dataFloor);
-      // console.log(v);
     }
+    a.dataBuilding = databuilding
     a.dataFloor = b;
   } else {
     var dataFloor = await floorReq(databuilding.id);
@@ -128,3 +142,5 @@ async function filterDatas(filterFL) {
   a.dataFloor = b;
   return a;
 }
+
+module.exports = router;
