@@ -102,15 +102,13 @@ async function floorReq(buildingID) {
 async function filterfloor(databuilding) {
   console.log('1.2');
   var a = {};
-  var b = {};
-  var key = 'id';
-  b[key] = [];
+  var b = [];
   console.log(databuilding.id);
   var v;
   if (typeof databuilding.id === "undefined") {
     for (var x in databuilding) {
       var dataFloor = await floorReq(databuilding[x].id);
-      b[key].push(dataFloor);
+      b.push(dataFloor);
     }
     a.dataBuilding = databuilding
     a.dataFloor = b;
@@ -124,7 +122,6 @@ async function filterfloor(databuilding) {
 
 async function filterDatas(filterValue, req) {
   console.log('1.4');
-  // console.log(filterValue);
   var a = {};
   var b = {};
   var key = 'floor';
@@ -158,10 +155,9 @@ async function filterDatas(filterValue, req) {
           b[key].push(v);
         }
       } else {
-        for (var k in d.id) {
-          var s = d.id[k];
+        for (var k in d) {
+          var s = d[k];
           for (var q in s) {
-            console.log(s[q].level);
             var v = {};
             v.level = s[q].level;
             v.level_height = s[q].level_height;
