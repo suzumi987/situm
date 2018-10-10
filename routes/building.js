@@ -17,7 +17,7 @@ router.get('/', async function (req, res) {
   console.log('1.1');
   var databuilding = await buildingReq(req);
   var filterFL = await filterfloor(databuilding);
-  var filterValue = await filterDatas(filterFL);
+  var filterValue = await filterDatas(filterFL, req);
 
   if (req.query.data == 'building') {
     if (req.query.key != null && req.query.value != null) {
@@ -122,32 +122,53 @@ async function filterfloor(databuilding) {
   return a;
 }
 
-async function filterDatas(filterValue) {
+async function filterDatas(filterValue, req) {
   console.log('1.4');
   // console.log(filterValue);
   var a = {};
   var b = {};
   var key = 'floor';
   b[key] = [];
-  var c ={};
+  var c = {};
   var keybuild = 'build';
-  c[keybuild]=[];
+  c[keybuild] = [];
   for (var x in filterValue) {
     var d = filterValue[x];
     if (x == 'dataBuilding') {
-      var v = {};
-      v.name = d.name;
-      v.location = d.location;
-      c[keybuild].push(v);
-    } else if (x == 'dataFloor') {
-      var z = filterValue[x];
-      for (var k in z) {
-        console.log(k);
+      if (req.query.key != null && req.query.value != null) {
         var v = {};
-        v.level = z[k].level;
-        v.level_height = z[k].level_height;
-        v.maps = z[k].maps;
-        b[key].push(v);
+        v.name = d.name;
+        v.location = d.location;
+        c[keybuild].push(v);
+      } else {
+        for (var val in d) {
+          var v = {};
+          v.name = d[val].name;
+          v.location = d[val].location;
+          c[keybuild].push(v);
+        }
+      }
+    } else if (x == 'dataFloor') {
+      if (req.query.key != null && req.query.value != null) {
+        for (var k in d) {
+          var v = {};
+          v.level = d[k].level;
+          v.level_height = d[k].level_height;
+          v.maps = d[k].maps;
+          b[key].push(v);
+        }
+      } else {
+        for (var k in d.id) {
+          var s = d.id[k];
+          for (var q in s) {
+            console.log(s[q].level);
+            var v = {};
+            v.level = s[q].level;
+            v.level_height = s[q].level_height;
+            v.maps = s[q].maps;
+            b[key].push(v);
+          }
+        }
       }
     }
   }
