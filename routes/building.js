@@ -124,32 +124,34 @@ async function filterfloor(databuilding) {
 
 async function filterDatas(filterValue) {
   console.log('1.4');
-  console.log(filterValue);
+  // console.log(filterValue);
   var a = {};
   var b = {};
   var key = 'floor';
   b[key] = [];
+  var c ={};
+  var keybuild = 'build';
+  c[keybuild]=[];
   for (var x in filterValue) {
     var d = filterValue[x];
     if (x == 'dataBuilding') {
-      for (var s in d) {
-        if (s == 'name') {
-          a.name = d[s];
-        } else if (s == 'location') {
-          a.location = d[s];
-        }
-      }
+      var v = {};
+      v.name = d.name;
+      v.location = d.location;
+      c[keybuild].push(v);
     } else if (x == 'dataFloor') {
       var z = filterValue[x];
       for (var k in z) {
-        var x = {};
-        x.level = z[k].level;
-        x.level_height = z[k].level_height;
-        x.maps = z[k].maps;
-        b[key].push(x);
+        console.log(k);
+        var v = {};
+        v.level = z[k].level;
+        v.level_height = z[k].level_height;
+        v.maps = z[k].maps;
+        b[key].push(v);
       }
     }
   }
+  a.dataBuilding = c;
   a.dataFloor = b;
   return a;
 }
