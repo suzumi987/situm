@@ -3,11 +3,21 @@ var router = express.Router();
 const axios = require('axios');
 
 
+/*   ............... URL Postman ...............
+  http://localhost:3000/building?data=building&key=ais&value=1
+  http://localhost:3000/building?data=building
+  http://localhost:3000/building?data=floor&key=ais&value=1
+  http://localhost:3000/building?data=floor
+  http://localhost:3000/building?data=filter&key=ais&value=1
+  http://localhost:3000/building?data=filter
+*/
+
+
 router.get('/', async function (req, res) {
   console.log('1.1');
   var databuilding = await buildingReq(req);
   var filterFL = await filterfloor(databuilding);
-  var filterData = await filterDatas(filterFL);
+  var filterValue = await filterDatas(filterFL);
 
   if (req.query.data == 'building') {
     if (req.query.key != null && req.query.value != null) {
@@ -23,9 +33,9 @@ router.get('/', async function (req, res) {
     }
   } else if (req.query.data == 'filter') {
     if (req.query.key != null && req.query.value != null) {
-      res.send(filterData);
+      res.send(filterValue);
     } else {
-      res.send(filterData);
+      res.send(filterValue);
     }
   }
 
@@ -112,14 +122,15 @@ async function filterfloor(databuilding) {
   return a;
 }
 
-async function filterDatas(filterFL) {
+async function filterDatas(filterValue) {
   console.log('1.4');
+  console.log(filterValue);
   var a = {};
   var b = {};
   var key = 'floor';
   b[key] = [];
-  for (var x in filterFL) {
-    var d = filterFL[x];
+  for (var x in filterValue) {
+    var d = filterValue[x];
     if (x == 'dataBuilding') {
       for (var s in d) {
         if (s == 'name') {
@@ -129,7 +140,7 @@ async function filterDatas(filterFL) {
         }
       }
     } else if (x == 'dataFloor') {
-      var z = filterFL[x];
+      var z = filterValue[x];
       for (var k in z) {
         var x = {};
         x.level = z[k].level;
@@ -140,7 +151,7 @@ async function filterDatas(filterFL) {
     }
   }
   a.dataFloor = b;
-  return a;
+  return filterValue;
 }
 
 module.exports = router;
