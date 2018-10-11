@@ -78,7 +78,6 @@ async function buildingReq(req) {
   return responseMesg;
 }
 
-
 async function floorReq(buildingID) {
   console.log('1.3');
   try {
@@ -97,7 +96,6 @@ async function floorReq(buildingID) {
   // console.log('xxxxx : ' + JSON.stringify(responseMesg));
   return responseMesg;
 }
-
 
 async function filterfloor(databuilding) {
   console.log('1.2');
@@ -129,47 +127,45 @@ async function filterDatas(filterValue, req) {
   var c = {};
   var keybuild = 'build';
   c[keybuild] = [];
-  for (var x in filterValue) {
-    var d = filterValue[x];
-    if (x == 'dataBuilding') {
-      if (req.query.key != null && req.query.value != null) {
-        var v = {};
-        v.name = d.name;
-        v.location = d.location;
-        c[keybuild].push(v);
-      } else {
-        for (var val in d) {
-          var v = {};
-          v.name = d[val].name;
-          v.location = d[val].location;
-          c[keybuild].push(v);
-        }
-      }
-    } else if (x == 'dataFloor') {
-      if (req.query.key != null && req.query.value != null) {
-        for (var k in d) {
-          var v = {};
-          v.level = d[k].level;
-          v.level_height = d[k].level_height;
-          v.maps = d[k].maps;
-          b[key].push(v);
-        }
-      } else {
-        for (var k in d) {
-          var s = d[k];
-          for (var q in s) {
-            var v = {};
-            v.level = s[q].level;
-            v.level_height = s[q].level_height;
-            v.maps = s[q].maps;
-            b[key].push(v);
+
+  var d = filterValue.dataBuilding;
+  var w = filterValue.dataFloor;
+  if (req.query.key != null && req.query.value != null) {
+    var v = {};
+    v.name = d.name;
+    v.location = d.location;
+    c[keybuild].push(v);
+    for (var k in w) {
+      var v = {};
+      v.level = w[k].level;
+      v.level_height = w[k].level_height;
+      v.maps = w[k].maps;
+      b[key].push(v);
+    }
+  } else {
+    for (var val in d) {
+      var v = {};
+      var f = [];
+      v.name = d[val].name;
+      v.location = d[val].location;
+      c[keybuild].push(v);
+      for (var k in w) {
+        var s = w[k];
+        
+        for (var q in s) {
+          if (d[val].id == s[q].project_id) {
+            var x = {};
+            x.level = s[q].level;
+            x.level_height = s[q].level_height;
+            x.maps = s[q].maps;
+            f.push(x);
           }
-        }
+          v.floors = f;
+        } 
       }
     }
   }
   a.dataBuilding = c;
-  a.dataFloor = b;
   return a;
 }
 
